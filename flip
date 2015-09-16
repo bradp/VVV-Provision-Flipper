@@ -111,12 +111,12 @@ check_for_provision_scripts_folder() {
 	check_for_path
 	test -d "$path/provision/scripts" && got_scripts_config="true"
 
-	if [ -z $got_scripts_config ]; then
+	if [ -z "$got_scripts_config" ]; then
 		info "Creating folder for scripts folder: $path/provision/scripts..."
 		mkdir -p "$path/provision/scripts"
 		success "Done"
 
-		if [ ! -z $(which curl) ]; then
+		if [ ! -z "$(which curl)" ]; then
 			info "Downloading sample provision script..."
 			curl --silent https://raw.githubusercontent.com/bradp/vvv-provision-flipper/master/scripts/sample > "$path/provision/scripts/sample"
 			cp "$path/provision/scripts/sample" "$path/provision/scripts/quick"
@@ -146,7 +146,7 @@ set_custom() {
 		mv "$path"/provision/scripts/"$1" "$path"/provision/provision-custom.sh
 		success "Set up $1 as the custom provision script."
 	else
-		error "A script of that name was not found in "$path"/provision/scripts."
+		error "A script of that name was not found in $path/provision/scripts."
 	fi
 }
 
