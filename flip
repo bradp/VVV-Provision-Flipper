@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+
+if [[ ! -z $(which tput) ]]; then
+	normal=$(tput sgr0)
+	bold=$(tput bold)
+	red=$(tput setaf 1)
+	green=$(tput setaf 2)
+	yellow=$(tput setaf 3)
+	magenta=$(tput setaf 5)
+fi
+
+
+# Usage: info "message"
+# Example: info "doing thing"
+# Output (to STDOUT): doing thing
+info() {
+	printf "%b" "${bold}${yellow}$1${normal} \n"
+}
+
+# Usage: success "message"
+# Example: success "It's Working"
+# Output (to STDOUT): [...] It's Working
+success() {
+	printf "%b" "[${green}Success${normal}]${green} $1 ${normal}\n"
+}
+
+# Usage: warning "message"
+# Example: warning "some warning"
+# Output (to STDOUT): [...] some warning
+warning() {
+	printf "%b" "${red} $1 ${normal}\n"
+}
+
+# Usage: prompt "question"
+# Example: prompt "Site name"
+# Output (to STDOUT): Site Name:
+prompt() {
+	printf "%b" "${magenta} $1: ${normal}"
+}
+
+# Usage: error ["message"]
+# Example: error "this is an error"
+# Output (to STDERR): [ERROR] this is an error
+error() {
+    printf "%b" "[${bold}${red}Error${normal}]${bold}${red} ${1:-'Unknown Error'}${normal}\n" >&2
+}
+
+# Usage: fail "message"
+# Example: fail "Unknown Option" 254
+fail() {
+	error "$1"
+	exit 1
+}
+
+check_for_path() {
+
+	test -f "$HOME"/.vvv-flipper && got_config="true"
+
+	if [ ! -z $got_config ]; then
+		path=$(cat "$HOME"/.vvv-flipper)
+	else
+		current_dir=$(pwd)
+		if [ -e "$current_dir/Vagrantfile" ]; then
+			path=$(pwd)
+		elif [ -e "$HOME"/Sites/Vagrantfile ]; then
+			path="$HOME"/Sites
+		elif [ -e "$HOME"/Sites/Vagrant/Vagrantfile ]; then
+			path="$HOME"/Sites/Vagrant
+		elif [ -e "$HOME"/vagrant/Vagrantfile ]; then
+			path="$HOME"/vagrant
+		elif [ -e "$HOME"/vagrant-local/Vagrantfile ]; then
+			path="$HOME"/vagrant-local
+		elif [ -e "$HOME"/projects/vvv/Vagrantfile ]; then
+			path="$HOME"/projects/vvv
+		elif [ -e "$HOME"/working/vvv/Vagrantfile ]; then
+			path="$HOME"/working/vvv
+		elif [ -e "$HOME"/vvv/Vagrantfile ]; then
+			path="$HOME"/vvv
+		fi
+		info "Automagically found $path"
+		prompt "Is this where vv is installed? (Y/n)"
+		read -r path_confirmation
+		if [ "$path_confirmation" = 'n' ]; then
+			unset path
+		fi
+
+		while [ -z "$path" ]; do
+			read -r -e -p "VVV install directory: " path
+
+			# Make sure directory is actually a VVV root
+			if [ ! -e "$(eval echo "${path//>}")/Vagrantfile" ]; then
+				error "Path specified is not a VVV root directory. Where is VVV installed?"
+				unset path
+			fi
+			path=$(eval echo "${path//>}")
+		done
+
+		path=${path%/}
+
+		echo "$path" > "$HOME"/.vvv-flipper
+	fi
+}
+
+
+
+check_args() {
+	while [ ! -z "$1" ]; do
+		case "$1" in
+			init)
+				check_for_path
+				echo "VVV path is set as: $path"
+				shift
+				;;
+			full)
+				check_for_path
+				remove_custom_provisioning_script
+				shift
+				;;
+			quick)
+				check_for_path
+				add_custom_provisioning_script
+				shift
+				;;
+			*)
+				fail "Unknown option $1"
+				shift
+				;;
+		esac
+	done
+	exit 0
+}
+
+main() {
+	check_args "$@"
+}
+main "$@"
