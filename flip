@@ -143,7 +143,7 @@ set_custom() {
 	test -f "$path"/provision/scripts/"$1" && script_exists="true"
 	if [ ! -z "$script_exists" ]; then
 		remove_custom_provisioning_script
-		mv "$path"/provision/scripts/"$1" "$path"/provision/provision-custom.sh
+		cp "$path"/provision/scripts/"$1" "$path"/provision/provision-custom.sh
 		success "Set up $1 as the custom provision script."
 	else
 		error "A script of that name was not found in $path/provision/scripts."
