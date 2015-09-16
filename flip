@@ -107,17 +107,29 @@ check_for_path() {
 	fi
 }
 
+check_for_provision_scripts_folder() {
+		test -d "$path"/provision/scripts && got_scripts_config="true"
+
+		if [ -z $got_scripts_config ]; then
+			info "Creating folder for scripts folder: $path/provision/scripts"
+			mkdir -p "$path"/provision/scripts
+		fi
+}
 
 
 check_args() {
 	while [ ! -z "$1" ]; do
 		case "$1" in
 			init)
+				info "Checking to see if VVV path is set..."
 				check_for_path
-				echo "VVV path is set as: $path"
+				success "VVV path is set as: $path"
+				info "Checking to see if provisioning scripts folder is set up..."
+				check_for_provision_scripts_folder
+				success "provisioning folder set."
 				shift
 				;;
-			full)
+			full|reset)
 				check_for_path
 				remove_custom_provisioning_script
 				shift
