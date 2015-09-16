@@ -52,6 +52,12 @@ fail() {
 	exit 1
 }
 
+argument_expected() {
+    if [ -z "$2" ] || [[ "$2" == -* ]]; then
+        fail "$1 expected an argument"
+    fi
+}
+
 check_for_path() {
 
 	test -f "$HOME"/.vvv-flipper && got_config="true"
@@ -120,6 +126,10 @@ check_args() {
 				check_for_path
 				add_custom_provisioning_script
 				shift
+				;;
+			set)
+				argument_expected "$1" "$2"
+				shift 2
 				;;
 			*)
 				fail "Unknown option $1"
