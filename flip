@@ -108,39 +108,59 @@ check_for_path() {
 }
 
 check_for_provision_scripts_folder() {
-		test -d "$path"/provision/scripts && got_scripts_config="true"
+	check_for_path
+	test -d "$path/provision/scripts" && got_scripts_config="true"
 
-		if [ -z $got_scripts_config ]; then
-			info "Creating folder for scripts folder: $path/provision/scripts"
-			mkdir -p "$path"/provision/scripts
+	if [ -z $got_scripts_config ]; then
+		info "Creating folder for scripts folder: $path/provision/scripts..."
+		mkdir -p "$path/provision/scripts"
+		success "Done"
+
+		if [ ! -z $(which curl) ]; then
+			info "Downloading sample provision script..."
+			curl --silent https://raw.githubusercontent.com/bradp/vvv-provision-flipper/master/scripts/sample > "$path/provision/scripts/sample"
+			cp "$path/provision/scripts/sample" "$path/provision/scripts/quick"
+			success "Done"
+		else
+			error "Could not download sample provision script."
 		fi
+	fi
+}
+
+remove_custom_provisioning_script() {
+	check_for_path
+	check_for_provision_scripts_folder
+	test -f "$path"/provision/provision-custom.sh && custom_provision="true"
+	if [ ! -z "$custom_provision" ]; then
+		mv "$path"/provision/provision-custom.sh "$path"/provision/scripts/backup
+		success "Removed custom provision script. Stored a backup in $path/provision/scripts/backup"
+	fi
+}
+
+set_custom() {
+	check_for_path
+	check_for_provision_scripts_folder
+	test -f "$path"/provision/scripts/"$1" && script_exists="true"
+	if [ ! -z "$script_exists" ]; then
+		remove_custom_provisioning_script
+		mv "$path"/provision/scripts/"$1" "$path"/provision/provision-custom.sh
+		success "Set up $1 as the custom provision script."
+	else
+		error "A script of that name was not found in "$path"/provision/scripts."
+	fi
 }
 
 
 check_args() {
 	while [ ! -z "$1" ]; do
 		case "$1" in
-			init)
-				info "Checking to see if VVV path is set..."
-				check_for_path
-				success "VVV path is set as: $path"
-				info "Checking to see if provisioning scripts folder is set up..."
-				check_for_provision_scripts_folder
-				success "provisioning folder set."
-				shift
-				;;
 			full|reset)
-				check_for_path
 				remove_custom_provisioning_script
-				shift
-				;;
-			quick)
-				check_for_path
-				add_custom_provisioning_script
 				shift
 				;;
 			set)
 				argument_expected "$1" "$2"
+				set_custom "$2"
 				shift 2
 				;;
 			*)
@@ -153,6 +173,10 @@ check_args() {
 }
 
 main() {
+	if [ -z "$1" ]; then
+	    check_for_path
+	    check_for_provision_scripts_folder
+	fi
 	check_args "$@"
 }
 main "$@"
