@@ -118,8 +118,8 @@ check_for_provision_scripts_folder() {
 
 		if [ ! -z "$(which curl)" ]; then
 			info "Downloading sample provision script..."
-			curl --silent https://raw.githubusercontent.com/bradp/vvv-provision-flipper/master/scripts/sample > "$path/provision/scripts/sample"
-			cp "$path/provision/scripts/sample" "$path/provision/scripts/quick"
+			curl --silent https://raw.githubusercontent.com/bradp/vvv-provision-flipper/master/scripts/sample > "$path/provision/scripts/quick"
+			cp "$path/provision/provision.sh" "$path/provision/scripts/sample"
 			success "Done"
 		else
 			error "Could not download sample provision script."
