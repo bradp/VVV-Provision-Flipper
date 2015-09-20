@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+if [ "$1" == "debug" ]; then
+	set -x
+	shift
+fi
+
 if [[ ! -z $(which tput) ]]; then
 	normal=$(tput sgr0)
 	bold=$(tput bold)
