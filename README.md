@@ -16,7 +16,7 @@ Homebrew installation is planned for the near future.
 
 ## Usage
 
-The first time you run 'flip' you will be prompted to confirm your VVV path. This process will also set up a 'scripts' folder inside of the provision folder in your VVV installation. Two files will be created, 'sample' and 'quick'. Sample will be a copy of the VVV provision script, ready for modifications. Quick is a trimmed-down version of default script.
+The first time you run 'flip' you will be prompted to confirm your VVV path. This process will also set up a `scripts` folder inside of the provision folder in your VVV installation ( `<your-vvv-path>/provision/scripts`). Two files will be created, `sample` and `quick`. `sample` will be a copy of the VVV provision script, ready for modifications. `quick` is a trimmed-down version of default script.
 
 By placing any scripts into this folder, you are able to quick use them as your main provison script by running `flip set <name>`.
 To use the quicker version, simply run 'flip set quick'
