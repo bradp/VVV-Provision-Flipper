@@ -8,6 +8,8 @@ With VVV Provision Flipper, you can easily set up multiple named [Varying Vagran
 
 This is useful, as you can set a provisioning script, for example, that skips updating the included WordPress version to speed up the process. And then periodically toggle between the quick script and the default version included in VVV.
 
+Using the default `quick` profile, I was able to bring my provison time down to just 21 seconds, vs the normal 300+ seconds. Your mileage may vary.
+
 ## Installation
 
 To install, you'll want to add the `flip` file above to your `$PATH`. In your terminal, simply do `$ echo $PATH` and save [flip](https://raw.githubusercontent.com/bradp/vvv-provision-flipper/master/flip) in one of those folders. You may have to `$ chmod +x flip` in the directory you save as well.
