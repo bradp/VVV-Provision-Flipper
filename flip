@@ -129,6 +129,15 @@ check_for_provision_scripts_folder() {
 		else
 			error "Could not download sample provision script."
 		fi
+
+		test -f "$path"/provision/provision-custom.sh && custom_provision="true"
+
+		if [ ! -z "$custom_provision" ]; then
+			mv "$path"/provision/provision-custom.sh "$path"/provision/scripts/original
+			info "Moved your current custom script to $path/provision/scripts/original"
+			set_custom "original"
+		fi
+
 	fi
 }
 
@@ -155,6 +164,20 @@ set_custom() {
 	fi
 }
 
+run_vagrant_provision() {
+	check_for_path
+	cd "$path"
+	info "Attempting to run 'vagrant provision' in $path "
+	provision_results="$(vagrant provision)"
+
+	if [[ "$provision_results" == *"VM is not currently running"* ]]; then
+		info "Running 'vagrant up' and 'vagrant provision'"
+	  vagrant up --provision
+	fi
+
+	success "vagrant provision complete"
+}
+
 
 check_args() {
 	while [ ! -z "$1" ]; do
@@ -167,6 +190,18 @@ check_args() {
 				argument_expected "$1" "$2"
 				set_custom "$2"
 				shift 2
+				;;
+			use)
+				argument_expected "$1" "$2"
+
+				set_custom "$2"
+				run_vagrant_provision
+				set_custom "backup"
+				shift 2
+				;;
+			provision)
+				run_vagrant_provision
+				exit
 				;;
 			*)
 				fail "Unknown option $1"
