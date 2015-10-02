@@ -10,13 +10,9 @@ This is useful, as you can set a provisioning script, for example, that skips up
 
 ## Installation
 
-If you have Homebrew installed, you run the following in your terminal application:
+To install, you'll want to add the `flip` file above to your `$PATH`. In your terminal, simply do `$ echo $PATH` and save [flip](https://raw.githubusercontent.com/bradp/vvv-provision-flipper/master/flip) in one of those folders. You may have to `$ chmod +x flip` in the directory you save as well.
 
-```
-$ brew install bradp/vvv-provision-flipper/vvv-provision-flipper
-```
-
-Otherwise you'll want to clone and edit your $PATH to include the flip file.
+Homebrew installation is planned for the near future.
 
 ## Usage
 
