@@ -89,7 +89,7 @@ check_for_path() {
 			path="$HOME"/vvv
 		fi
 		info "Automagically found $path"
-		prompt "Is this where vv is installed? (Y/n)"
+		prompt "Is this where VVV is installed? (Y/n)"
 		read -r path_confirmation
 		if [ "$path_confirmation" = 'n' ]; then
 			unset path
