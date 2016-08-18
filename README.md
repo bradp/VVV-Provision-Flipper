@@ -8,7 +8,7 @@ With VVV Provision Flipper, you can easily set up multiple named [Varying Vagran
 
 This is useful, as you can set a provisioning script, for example, that skips updating the included WordPress version to speed up the process. And then periodically toggle between the quick script and the default version included in VVV.
 
-Using the default `quick` profile, I was able to bring my provison time down to just 21 seconds, vs the normal 300+ seconds. Your mileage may vary.
+Using the default `quick` profile, I was able to bring my provision time down to just 21 seconds, vs the normal 300+ seconds. Your mileage may vary.
 
 ## Installation
 
@@ -18,9 +18,9 @@ Homebrew installation is planned for the near future.
 
 ## Usage
 
-The first time you run 'flip' you will be prompted to confirm your VVV path. This process will also set up a `scripts` folder inside of the provision folder in your VVV installation ( `<your-vvv-path>/provision/scripts`). Two files will be created, `sample` and `quick`. `sample` will be a copy of the VVV provision script, ready for modifications. `quick` is a trimmed-down version of default script.
+The first time you run `flip` you will be prompted to confirm your VVV path. This process will also set up a `scripts` folder inside of the provision folder in your VVV installation ( `<your-vvv-path>/provision/scripts`). Two files will be created, `sample` and `quick`. `sample` will be a copy of the VVV provision script, ready for modifications. `quick` is a trimmed-down version of default script.
 
-By placing any scripts into this folder, you are able to quick use them as your main provison script by running `flip set <name>`.
+By placing any scripts into this folder, you are able to quick use them as your main provision script by running `flip set <name>`.
 To use the quicker version, simply run '`flip set quick`'
 
 To reset to using the normal provision script, simply run `flip reset`.
